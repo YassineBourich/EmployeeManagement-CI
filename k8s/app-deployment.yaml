@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: employee-management
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: employee-management
+  template:
+    metadata:
+      labels:
+        app: employee-management
+    spec:
+      containers:
+        - name: employee-management
+          image: master/employee-management:latest
+          env:
+            - name: DB_HOST
+              value: "postgres"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: "company_employees"
+            - name: DB_USER
+              value: "app"
+            - name: DB_PASSWORD
+              value: "app123"
+          ports:
+            - containerPort: 8080

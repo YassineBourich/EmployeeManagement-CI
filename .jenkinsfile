@@ -47,11 +47,13 @@ pipeline {
             }
         }
 
-        stage('Deploy Docker Compose') {
+        stage('Deploy to Minikube') {
             steps {
-                // Stop previous containers and redeploy
-                sh 'docker compose down'
-                sh 'docker compose up -d'
+                sh "kubectl apply -f k8s/postgres-deployment.yaml"
+                sh "kubectl apply -f k8s/postgres-service.yaml"
+                sh "kubectl apply -f k8s/app-deployment.yaml"
+                sh "kubectl apply -f k8s/app-service.yaml"
+                sh "kubectl apply -f k8s/ingress.yaml"
             }
         }
 
