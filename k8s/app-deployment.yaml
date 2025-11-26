@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: employee-management
-          image: master/employee-management:latest
+          image: yassinebourich/employee-management:latest
           env:
             - name: DB_HOST
               value: "postgres"
