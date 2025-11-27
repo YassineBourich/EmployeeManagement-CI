@@ -4,15 +4,16 @@ metadata:
   name: employee-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   rules:
     - host: localhost
       http:
         paths:
-          - path: /Employee-Management/?(.*)
-            pathType: Prefix
+          - path: /Employee-Management(/|$)(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: employee-management
                 port:
-                  number: 8080
+                  number: 80
