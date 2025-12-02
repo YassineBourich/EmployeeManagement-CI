@@ -54,28 +54,20 @@ pipeline {
                 sh "kubectl apply -f k8s/app-deployment.yaml"
                 sh "kubectl apply -f k8s/app-service.yaml"
                 sh "kubectl apply -f k8s/ingress.yaml"
-            }
-            post {
+
                 script {
-                    echo "Fetching Kubernetes service URL..."
+                    echo "Fetching Ingress URL..."
 
-                    // Show all services for debugging
-                    sh 'kubectl get svc -n default'
-
-                    // Get NodePort of the app
-                    def nodePort = sh(
-                        script: "kubectl get svc employee-management-service -o jsonpath='{.spec.ports[0].nodePort}'",
+                    // Get host
+                    def host = sh(
+                        script: "kubectl get ingress employee-ingress -o jsonpath='{.spec.rules[0].host}'",
                         returnStdout: true
                     ).trim()
 
-                    // Get minikube IP
-                    def miniIP = sh(
-                        script: "minikube ip",
-                        returnStdout: true
-                    ).trim()
-
-                    echo " APPLICATION URL:"
-                    echo " http://${miniIP}:${nodePort}/Employee-Management/"
+                    echo "--------------------------------------------"
+                    echo " ACCESS YOUR APPLICATION HERE:"
+                    echo "     http://${host}/Employee-Management/"
+                    echo "--------------------------------------------"
                 }
             }
         }
