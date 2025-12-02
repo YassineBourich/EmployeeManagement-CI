@@ -53,10 +53,14 @@ pipeline {
                 sh "kubectl apply -f k8s/postgres-service.yaml"
                 sh "kubectl apply -f k8s/app-deployment.yaml"
                 sh "kubectl apply -f k8s/app-service.yaml"
+                sh "kubectl addons enable ingress"
                 sh "kubectl apply -f k8s/ingress.yaml"
+
+                sh "minikube service list"
 
                 script {
                     echo "Fetching Ingress URL..."
+
 
                     // Get host
                     def host = sh(
