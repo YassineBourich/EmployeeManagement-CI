@@ -76,6 +76,25 @@ pipeline {
             }
         }
 
+        stage('Deploy Monitoring') {
+            steps {
+                bat """
+                set KUBECONFIG=C:\\Users\\Master\\.kube\\config
+
+                echo === Create monitoring namespace ===
+                kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
+
+                echo === Install Prometheus + Grafana ===
+                helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+                helm repo update
+                helm upgrade --install prometheus-stack prometheus-community/kube-prometheus-stack --namespace monitoring --wait --timeout=300s
+
+                echo === Apply ServiceMonitor for employee-management ===
+                kubectl apply -f k8s/servicemonitor-employee.yaml
+                """
+            }
+        }
+
 
         stage('Archive Artifacts') {
             steps {
