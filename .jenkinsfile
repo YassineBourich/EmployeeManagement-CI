@@ -101,5 +101,6 @@ pipeline {
                     echo "Docker logout failed or not needed: ${e.getMessage()}"
                 }
             }
+        }
     }
 }
