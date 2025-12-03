@@ -1,17 +1,47 @@
+# values.yaml for Minikube - Prometheus + Grafana
 grafana:
   adminUser: admin
   adminPassword: admin
   persistence:
-    enabled: false
+    enabled: false  # disables PVC for Minikube
 
 prometheus:
   prometheusSpec:
     storageSpec:
-      volumeClaimTemplate: null
+      volumeClaimTemplate: null  # disables PVC
     serviceMonitorSelectorNilUsesHelmValues: false
     serviceMonitorSelector: {}
+    replicas: 1
+    retention: "10d"
+    # Optional: lower resources for Minikube
+    resources:
+      requests:
+        memory: 256Mi
+        cpu: 100m
+      limits:
+        memory: 512Mi
+        cpu: 500m
 
 alertmanager:
   alertmanagerSpec:
     storage:
-      volumeClaimTemplate: null
+      volumeClaimTemplate: null  # disables PVC
+
+# Optional: node-exporter and kube-state-metrics
+kube-state-metrics:
+  resources:
+    requests:
+      memory: 128Mi
+      cpu: 50m
+    limits:
+      memory: 256Mi
+      cpu: 100m
+
+nodeExporter:
+  resources:
+    requests:
+      memory: 128Mi
+      cpu: 50m
+    limits:
+      memory: 256Mi
+      cpu: 100m
