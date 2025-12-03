@@ -119,9 +119,7 @@ pipeline {
                         for /f "tokens=*" %%i in ('minikube ip') do set MINIKUBE_IP=%%i
 
                         echo === Grafana Access Info ===
-                        echo URL: http://%%MINIKUBE_IP%%:3000
-                        echo Username: ${GRAFANA_USER}
-                        echo Password: ${GRAFANA_PASS}
+                        echo URL: http://%MINIKUBE_IP%:3000
                         """
                     }
                 }
