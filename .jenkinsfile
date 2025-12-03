@@ -76,6 +76,7 @@ pipeline {
             }
         }
 
+
         stage('Deploy Monitoring (Prometheus + Grafana)') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'grafana-id', usernameVariable: 'GRAFANA_USER', passwordVariable: 'GRAFANA_PASS')]) {
