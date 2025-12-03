@@ -91,7 +91,7 @@ pipeline {
         kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
 
         echo === Install Prometheus Operator with Grafana ===
-        helm upgrade --install prometheus-operator prometheus-community/kube-prometheus-stack `
+        helm upgrade --install prometheus-stack prometheus-community/kube-prometheus-stack `
             --namespace monitoring `
             --set grafana.adminUser=admin `
             --set grafana.adminPassword=admin `
