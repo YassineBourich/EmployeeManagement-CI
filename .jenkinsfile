@@ -92,5 +92,14 @@ pipeline {
         failure {
             echo "FAILURE."
         }
+        always {
+            script {
+                try {
+                    echo "Ensuring Docker logout from ${DOCKER_REGISTRY}"
+                    bat "docker logout ${DOCKER_REGISTRY}"
+                } catch (Exception e) {
+                    echo "Docker logout failed or not needed: ${e.getMessage()}"
+                }
+            }
     }
 }
