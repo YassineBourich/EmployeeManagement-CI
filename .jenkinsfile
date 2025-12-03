@@ -78,20 +78,37 @@ pipeline {
 
         stage('Deploy Monitoring') {
             steps {
+                withCredentials([usernamePassword(credentialsId: 'grafana-id', usernameVariable: 'GRAFANA_USER', passwordVariable: 'GRAFANA_PASS')]) {
                 bat """
                 set KUBECONFIG=C:\\Users\\Master\\.kube\\config
 
                 echo === Create monitoring namespace ===
                 kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
 
-                echo === Install Prometheus + Grafana ===
-                helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-                helm repo update
-                helm upgrade --install prometheus-stack prometheus-community/kube-prometheus-stack --namespace monitoring --wait --timeout=300s
+                echo === Add Helm repo ===
+                C:\\Helm\\helm.exe repo add prometheus-community https://prometheus-community.github.io/helm-charts
+                C:\\Helm\\helm.exe repo update
+
+                echo === Install Prometheus + Grafana with custom credentials ===
+                C:\\Helm\\helm.exe upgrade --install prometheus-stack prometheus-community/kube-prometheus-stack ^
+                  --namespace monitoring ^
+                  --wait --timeout=600s ^
+                  --set grafana.adminUser=%GRAFANA_USER% ^
+                  --set grafana.adminPassword=%GRAFANA_PASS%
 
                 echo === Apply ServiceMonitor for employee-management ===
                 kubectl apply -f k8s/servicemonitor-employee.yaml
+
+                echo === Fetch Minikube IP ===
+                for /f "tokens=*" %%i in ('minikube ip') do set MINIKUBE_IP=%%i
+
+                echo === Port forwarding ===
+                kubectl -n monitoring port-forward svc/prometheus-stack-grafana 3000:80
+
+                echo === Grafana Access Info ===
+                echo URL: http://%%MINIKUBE_IP%%:3000
                 """
+                }
             }
         }
 
