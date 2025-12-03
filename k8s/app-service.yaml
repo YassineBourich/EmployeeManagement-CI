@@ -2,10 +2,17 @@ apiVersion: v1
 kind: Service
 metadata:
   name: employee-management
+  labels:
+    app: employee-management
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "80"
+    prometheus.io/path: "/actuator/prometheus"
 spec:
   type: ClusterIP
   selector:
     app: employee-management
   ports:
-    - port: 80
+    - name: http
+      port: 80
       targetPort: 8080
