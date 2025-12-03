@@ -1,0 +1,17 @@
+grafana:
+  adminUser: admin
+  adminPassword: admin
+  persistence:
+    enabled: false
+
+prometheus:
+  prometheusSpec:
+    storageSpec:
+      volumeClaimTemplate: null
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelector: {}
+
+alertmanager:
+  alertmanagerSpec:
+    storage:
+      volumeClaimTemplate: null
