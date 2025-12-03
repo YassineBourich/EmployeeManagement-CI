@@ -3,10 +3,10 @@ kind: Service
 metadata:
   name: employee-management
 spec:
+  type: NodePort
   selector:
     app: employee-management
   ports:
-    - port: 80
-      targetPort: 8080
-      protocol: TCP
-    - type: NodePort
+    - port: 80   # Service port you want to expose
+      targetPort: 8080   # Port inside the container (Tomcat)
+      nodePort: 30091    # NodePort must be between 30000–32767
