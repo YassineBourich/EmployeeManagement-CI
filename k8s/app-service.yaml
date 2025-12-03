@@ -3,10 +3,9 @@ kind: Service
 metadata:
   name: employee-management
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: employee-management
   ports:
-    - port: 80   # Service port you want to expose
-      targetPort: 8080   # Port inside the container (Tomcat)
-      nodePort: 30091    # NodePort must be between 30000–32767
+    - port: 80
+      targetPort: 8080

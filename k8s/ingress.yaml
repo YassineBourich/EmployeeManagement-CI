@@ -3,14 +3,14 @@ kind: Ingress
 metadata:
   name: employee-ingress
   annotations:
-    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/use-regex: "false"  # not needed
 spec:
   ingressClassName: nginx
   rules:
     - host: localhost
       http:
         paths:
-          - path: /Employee-Management(/|$)
+          - path: /Employee-Management
             pathType: Prefix
             backend:
               service:
