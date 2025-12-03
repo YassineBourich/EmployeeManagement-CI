@@ -93,6 +93,8 @@ pipeline {
                     helm upgrade --install kube-prometheus-stack prometheus-community/kube-prometheus-stack ^
                         --namespace monitoring ^
                         --create-namespace ^
+                        --set admin.user=admin ^
+                        --set admin.password=admin ^
                         --wait --timeout=300s
 
                     echo === Apply ServiceMonitor ===
