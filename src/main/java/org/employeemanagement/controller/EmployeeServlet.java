@@ -82,7 +82,7 @@ public class EmployeeServlet extends HttpServlet {
 
 
 
-    private void addEmployee(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    private void addEmployee(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             Employee employee = extractEmployeeFromRequest(request);
             employeeService.addEmployee(employee);
@@ -98,7 +98,7 @@ public class EmployeeServlet extends HttpServlet {
     }
 
 
-    private void updateEmployee(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    private void updateEmployee(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             Employee employee = extractEmployeeFromRequest(request);
             employee.setId(Long.parseLong(request.getParameter("id")));

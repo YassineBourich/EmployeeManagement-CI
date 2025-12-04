@@ -20,7 +20,7 @@ import java.util.List;
 
 @WebServlet("/candidate")
 public class CandidateServlet extends HttpServlet {
-
+    private final String SKILLS = "skills";
     private ApplicationService applicationService;
     private ApplicationJobOfferService applicationJobOfferService;
 
@@ -50,7 +50,7 @@ public class CandidateServlet extends HttpServlet {
 
 
              List<String> skills = applicationService.findAllSkills();
-             request.setAttribute("skills", skills);
+             request.setAttribute(SKILLS, skills);
 
          } catch (Exception e) {
              e.printStackTrace();
@@ -66,7 +66,6 @@ public class CandidateServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String statusParam = request.getParameter("status");
-        String skillsParam = request.getParameter("skills");
 
         Boolean status = null;
         if ("true".equals(statusParam)) {
@@ -80,7 +79,7 @@ public class CandidateServlet extends HttpServlet {
 
 
         List<String> skills = applicationService.findAllSkills();
-        request.setAttribute("skills", skills);
+        request.setAttribute(SKILLS, skills);
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("view/candidate.jsp");
         dispatcher.forward(request, response);

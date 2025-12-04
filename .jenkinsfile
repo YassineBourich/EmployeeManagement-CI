@@ -9,6 +9,7 @@ pipeline {
     environment {
         SONARQUBE = 'SonarQube'
         DOCKER_IMAGE = "yassinebourich/employee-management:latest"
+        DOCKER_REGISTRY = "docker.io"
     }
 
     stages {
@@ -39,10 +40,10 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                // DockerHub credentials stored in Jenkins as "dockerhub-pass"
                 withCredentials([string(credentialsId: 'Jenkins-Docker-Token', variable: 'TOKEN')]) {
-                    sh "echo $TOKEN | docker login -u yassinebourich --password-stdin"
+                    sh "echo $TOKEN | docker login ${DOCKER_REGISTRY} -u yassinebourich --password-stdin"
                     sh "docker push ${DOCKER_IMAGE}"
+                    sh "docker logout ${DOCKER_REGISTRY}"
                 }
             }
         }
@@ -69,42 +70,12 @@ pipeline {
                     ).trim()
 
                     echo "--------------------------------------------"
-                    echo " ACCESS YOUR APPLICATION HERE:"
-                    echo "     http://${host}/Employee-Management/"
+                    echo " Application URL:"
+                    echo " http://${host}/Employee-Management/"
                     echo "--------------------------------------------"
                 }
             }
         }
-
-        stage('Deploy Monitoring (Prometheus + Grafana)') {
-            steps {
-                script {
-                    bat """
-                    set KUBECONFIG=C:\\Users\\Master\\.kube\\config
-
-                    echo === Create monitoring namespace ===
-                    kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
-
-                    echo === Add repo ===
-                    helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-                    helm repo update
-
-                    echo === Install monitoring stack ===
-                    helm upgrade --install kube-prometheus-stack prometheus-community/kube-prometheus-stack ^
-                        --namespace monitoring ^
-                        --create-namespace ^
-                        -f k8s/values.yaml ^
-                        --wait --timeout=300s
-
-                    echo === Apply ServiceMonitor ===
-                    kubectl apply -f k8s/servicemonitor.yaml
-                    """
-                }
-            }
-        }
-
-
-
 
         stage('Archive Artifacts') {
             steps {

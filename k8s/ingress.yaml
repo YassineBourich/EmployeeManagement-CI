@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: employee-ingress
   annotations:
-    nginx.ingress.kubernetes.io/use-regex: "false"  # not needed
+    nginx.ingress.kubernetes.io/use-regex: "false"
 spec:
   ingressClassName: nginx
   rules:
