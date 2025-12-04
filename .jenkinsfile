@@ -93,12 +93,11 @@ pipeline {
                     helm upgrade --install kube-prometheus-stack prometheus-community/kube-prometheus-stack ^
                         --namespace monitoring ^
                         --create-namespace ^
-                        --set grafana.adminUser=admin ^
-                        --set grafana.adminPassword=admin ^
+                        -f k8s/values.yaml ^
                         --wait --timeout=300s
 
                     echo === Apply ServiceMonitor ===
-                    kubectl apply -f k8s/servicemonitor.yaml --validate=false
+                    kubectl apply -f k8s/servicemonitor.yaml
                     """
                 }
             }
