@@ -4,7 +4,10 @@ metadata:
   name: employee-management
   labels:
     app: employee-management
-
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "80"
+    prometheus.io/path: "/actuator/prometheus"
 spec:
   type: ClusterIP
   selector:
