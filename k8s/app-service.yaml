@@ -4,7 +4,6 @@ metadata:
   name: employee-management
   labels:
     app: employee-management
-    version: v1
 
 spec:
   type: ClusterIP
