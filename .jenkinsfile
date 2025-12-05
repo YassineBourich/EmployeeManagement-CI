@@ -81,17 +81,33 @@ pipeline {
             steps {
                 script {
                     bat """
-                    echo === Cleaning monitoring namespace ===
-                    helm uninstall kube-prometheus-stack -n monitoring
+                    echo === Uninstall Helm release (ignore errors) ===
+                    helm uninstall kube-prometheus-stack -n monitoring || exit /b 0
 
-                    kubectl delete crd servicemonitors.monitoring.coreos.com
-                    kubectl delete crd podmonitors.monitoring.coreos.com
-                    kubectl delete crd prometheuses.monitoring.coreos.com
-                    kubectl delete crd alertmanagers.monitoring.coreos.com
-                    kubectl delete crd rules.monitoring.coreos.com
-                    kubectl delete crd thanosrulers.monitoring.coreos.com
+                    echo === Delete CRDs (ignore errors) ===
+                    kubectl delete crd servicemonitors.monitoring.coreos.com --ignore-not-found=true
+                    kubectl delete crd podmonitors.monitoring.coreos.com --ignore-not-found=true
+                    kubectl delete crd prometheuses.monitoring.coreos.com --ignore-not-found=true
+                    kubectl delete crd alertmanagers.monitoring.coreos.com --ignore-not-found=true
+                    kubectl delete crd prometheusrules.monitoring.coreos.com --ignore-not-found=true
+                    kubectl delete crd thanosrulers.monitoring.coreos.com --ignore-not-found=true
+                    kubectl delete crd alertmanagerconfigs.monitoring.coreos.com --ignore-not-found=true
 
-                    kubectl get pods -n monitoring
+                    echo === Delete namespace (ignore errors) ===
+                    kubectl delete namespace monitoring --ignore-not-found=true
+
+                    echo === Wait until namespace disappears ===
+                    for /l %%x in (1, 1, 30) do (
+                        kubectl get ns monitoring >nul 2>nul
+                        if errorlevel 1 (
+                            echo Namespace monitoring deleted.
+                            goto ns_deleted
+                        )
+                        echo Waiting namespace termination...
+                        timeout /t 2 >nul
+                    )
+
+                    :ns_deleted
 
                     echo === Setting Kube configuration ===
                     set KUBECONFIG=C:\\Users\\Master\\.kube\\config
