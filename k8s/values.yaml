@@ -1,8 +1,6 @@
 grafana:
   adminUser: admin
   adminPassword: admin
-  initChownData:
-    enabled: false
   persistence:
     enabled: true
     type: pvc
