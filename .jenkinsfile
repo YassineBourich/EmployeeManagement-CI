@@ -81,6 +81,19 @@ pipeline {
             steps {
                 script {
                     bat """
+                    echo === Cleaning monitoring namespace ===
+                    helm uninstall prometheus-stack -n monitoring
+
+                    kubectl delete crd servicemonitors.monitoring.coreos.com
+                    kubectl delete crd podmonitors.monitoring.coreos.com
+                    kubectl delete crd prometheuses.monitoring.coreos.com
+                    kubectl delete crd alertmanagers.monitoring.coreos.com
+                    kubectl delete crd rules.monitoring.coreos.com
+                    kubectl delete crd thanosrulers.monitoring.coreos.com
+
+                    kubectl get pods -n monitoring
+
+                    echo === Setting Kube configuration ===
                     set KUBECONFIG=C:\\Users\\Master\\.kube\\config
 
                     echo === Create monitoring namespace ===
