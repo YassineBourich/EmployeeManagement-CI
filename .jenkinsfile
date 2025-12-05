@@ -82,7 +82,7 @@ pipeline {
                 script {
                     bat """
                     echo === Uninstall Helm release (ignore errors) ===
-                    helm uninstall kube-prometheus-stack -n monitoring || exit /b 0
+                    helm uninstall kube-prometheus-stack -n monitoring
 
                     echo === Delete CRDs (ignore errors) ===
                     kubectl delete crd servicemonitors.monitoring.coreos.com --ignore-not-found=true
