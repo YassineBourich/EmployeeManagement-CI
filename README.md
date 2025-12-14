@@ -1,3 +1,11 @@
+Project DevOps by:
+- Yassine BOURICH
+- Moad CHAHTI
+
+Supervised by:
+- Karima MOUMANE
+- Abdelkader ELMAHDAOUI
+
 
 # 👨‍💼 Employee Management System V2
 
