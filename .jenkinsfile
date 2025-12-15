@@ -127,7 +127,6 @@ pipeline {
                         --wait --timeout=300s
 
                     echo === Apply ServiceMonitor ===
-                    kubectl apply -f k8s/servicemonitor.yaml
                     """
                 }
             }
